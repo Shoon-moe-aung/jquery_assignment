@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Web Form Assignment</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+          crossorigin="anonymous"></script>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <style>
+    .error-text {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 3px;
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-body">
+      <h3 class="mb-4">Interactive Web Form</h3>
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text" id="username" class="form-control">
+        <small id="usernameError" class="error-text"></small>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" id="email" class="form-control">
+        <small id="emailError" class="error-text"></small>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" id="password" class="form-control">
+        <small id="passwordError" class="error-text"></small>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-3">
+        <label class="form-label">Confirm Password</label>
+        <input type="password" id="confirmPassword" class="form-control">
+        <small id="confirmPasswordError" class="error-text"></small>
+      </div>
+
+      <!-- Interesting Topics -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">Interesting Topics
+          <span id="topicsError" class="error-text"></span>
+        </label>
+        <div class="form-check">
+          <input class="form-check-input topic" type="checkbox" id="topic1" value="HTML">
+          <label class="form-check-label" for="topic1">HTML</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input topic" type="checkbox" id="topic2" value="CSS">
+          <label class="form-check-label" for="topic2">CSS</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input topic" type="checkbox" id="topic3" value="JavaScript">
+          <label class="form-check-label" for="topic3">JavaScript</label>
+        </div>
+      </div>
+
+      <!-- Gender -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">
+          Gender
+          <span id="genderError" class="error-text"></span>
+        </label>
+        <select id="gender" class="form-select">
+          <option>--</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <!-- Submit -->
+      <button id="submitBtn" class="btn btn-primary">Submit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(function () {
+
+    function resetErrors() {
+      // clear texts
+      $('.error-text').text('');
+      // reset borders
+      $('.form-control, .form-select').css('border-color', '');
+    }
+
+    function checkEmpty(selector, errorSelector) {
+      const value = $(selector).val().trim();
+      if (!value) {
+        $(selector).css('border-color', 'red');
+        $(errorSelector).text('this filed must not be empty');
+        return false;
+      }
+      return true;
+    }
+
+    $('#submitBtn').on('click', function (e) {
+      e.preventDefault(); // prevent actual submit 
+      resetErrors();
+
+      let isValid = true;
+
+      // 1. Empty checks
+      if (!checkEmpty('#username', '#usernameError')) isValid = false;
+      if (!checkEmpty('#email', '#emailError')) isValid = false;
+      if (!checkEmpty('#password', '#passwordError')) isValid = false;
+      if (!checkEmpty('#confirmPassword', '#confirmPasswordError')) isValid = false;
+
+      // 2. Interesting Topics: at least one checked
+      if ($('.topic:checked').length === 0) {
+        $('#topicsError').text('At least one topic must be selected');
+        isValid = false;
+      }
+
+      // 3. Gender must not be "--"
+      if ($('#gender').val() === '--') {
+        $('#genderError').text('please choose your gender');
+        $('#gender').css('border-color', 'red');
+        isValid = false;
+      }
+
+      // 4. Confirm password must match password
+      const pwd = $('#password').val();
+      const cpwd = $('#confirmPassword').val();
+      if (pwd && cpwd && pwd !== cpwd) {
+        $('#confirmPassword').css('border-color', 'red');
+        $('#confirmPasswordError').text('confirmed password mismatched the password');
+        isValid = false;
+      }
+
+      if (isValid) {
+        alert('Form is valid! (Here you could submit it)');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
